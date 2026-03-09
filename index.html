@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grably - 공동구매 모음</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&family=Outfit:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --p:#FF5A36;
+  --pl:#fff3f0;
+  --pm:#ffd4cb;
+  --t:#111;
+  --m:#666;
+  --s:#aaa;
+  --bg:#f8f8f6;
+  --w:#fff;
+  --sh:0 8px 40px rgba(0,0,0,.06);
+  --shh:0 16px 48px rgba(255,90,54,.15);
+}
+body{font-family:"Noto Sans KR",sans-serif;background:var(--bg);color:var(--t);}
+
+/* ── 네비 ── */
+nav{background:rgba(255,255,255,.92);backdrop-filter:blur(16px);position:sticky;top:0;z-index:100;}
+.ni{max-width:1140px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:16px 28px;gap:12px;}
+.logo{font-family:"Outfit",sans-serif;font-size:24px;font-weight:900;cursor:pointer;letter-spacing:-0.5px;flex-shrink:0;}
+.logo .gr{color:var(--p);}
+.nl{display:flex;gap:18px;list-style:none;font-size:13px;color:var(--m);overflow-x:auto;scrollbar-width:none;}
+.nl::-webkit-scrollbar{display:none;}
+.nl li{cursor:pointer;transition:color .2s;white-space:nowrap;font-weight:500;}
+.nl li:hover,.nl li.active{color:var(--p);font-weight:700;}
+.nr{display:flex;gap:8px;align-items:center;flex-shrink:0;}
+.lb{display:flex;align-items:center;gap:4px;background:none;color:var(--m);padding:6px 14px;border-radius:50px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;white-space:nowrap;border:none;}
+.lb:hover{color:var(--p);}
+.lb.en{color:var(--p);}
+.bo{background:none;color:var(--m);padding:8px 18px;border-radius:50px;font-size:13px;cursor:pointer;font-weight:600;font-family:inherit;transition:all .2s;white-space:nowrap;border:none;}
+.bo:hover{color:var(--p);}
+
+/* ── 히어로 ── */
+.hero{background:var(--w);padding:72px 24px 52px;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-120px;left:50%;transform:translateX(-50%);width:700px;height:700px;background:radial-gradient(circle,rgba(255,90,54,.07) 0%,transparent 65%);pointer-events:none;}
+.hbadge{display:inline-flex;align-items:center;gap:6px;background:var(--pl);color:var(--p);font-size:12px;font-weight:700;padding:6px 16px;border-radius:50px;margin-bottom:20px;}
+.hero h1{font-family:"Outfit",sans-serif;font-size:46px;font-weight:900;line-height:1.15;letter-spacing:-1.5px;margin-bottom:14px;}
+.hero h1 em{color:var(--p);font-style:normal;}
+.hero p{font-size:15px;color:var(--s);margin-bottom:32px;line-height:1.8;}
+.sbox{display:flex;align-items:center;max-width:560px;margin:0 auto 22px;background:#f4f4f2;border-radius:50px;padding:8px 8px 8px 22px;gap:10px;transition:all .25s;}
+.sbox:focus-within{background:var(--w);box-shadow:0 0 0 3px rgba(255,90,54,.15);}
+.sbox input{border:none;background:transparent;flex:1;font-size:15px;outline:none;font-family:inherit;color:var(--t);}
+.sbox input::placeholder{color:var(--s);}
+.sbox button{background:var(--p);color:#fff;border:none;border-radius:50px;padding:11px 26px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;transition:opacity .2s;}
+.sbox button:hover{opacity:.88;}
+.ctags{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;}
+.tag{background:var(--bg);border-radius:50px;padding:7px 16px;font-size:13px;color:var(--m);cursor:pointer;transition:all .2s;font-weight:500;border:none;}
+.tag:hover{color:var(--p);background:var(--pl);}
+.tag.active{background:var(--p);color:#fff;font-weight:700;}
+
+/* ── 검색결과 ── */
+.ra{max-width:1140px;margin:0 auto;padding:36px 28px 0;display:none;}
+.ra.visible{display:block;}
+.rh{display:flex;align-items:center;gap:10px;margin-bottom:20px;}
+.rk{font-size:18px;font-weight:800;}
+.rk em{color:var(--p);font-style:normal;}
+.rcnt{font-size:13px;color:var(--s);background:#f0f0ee;padding:4px 12px;border-radius:50px;}
+.rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:48px;}
+.rcard{background:var(--w);border-radius:20px;padding:18px;display:flex;gap:14px;align-items:flex-start;cursor:pointer;transition:all .2s;box-shadow:var(--sh);}
+.rcard:hover{box-shadow:var(--shh);transform:translateY(-2px);}
+.remoji{width:50px;height:50px;border-radius:14px;background:var(--pl);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.rname{font-size:14px;font-weight:700;margin-bottom:3px;}
+.rby{font-size:12px;color:var(--s);margin-bottom:5px;}
+.rprice{font-size:15px;font-weight:800;color:var(--p);}
+.rdisc{font-size:11px;color:var(--s);font-weight:400;margin-left:4px;}
+
+/* ── 공구 섹션 ── */
+.gsec{max-width:1140px;margin:0 auto;padding:48px 28px 0;}
+.gsh{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
+.gtit{font-family:"Outfit",sans-serif;font-size:22px;font-weight:800;letter-spacing:-.5px;}
+.gtit span{color:var(--p);}
+.seeall{font-size:13px;color:var(--s);cursor:pointer;font-weight:600;}
+.seeall:hover{color:var(--p);}
+.ggrid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;}
+.gcard{background:var(--w);border-radius:24px;overflow:hidden;box-shadow:var(--sh);transition:all .25s;cursor:pointer;}
+.gcard:hover{box-shadow:var(--shh);transform:translateY(-4px);}
+
+/* 슬라이더 */
+.slider{position:relative;width:100%;padding-bottom:68%;overflow:hidden;}
+.sinner{position:absolute;top:0;left:0;display:flex;width:100%;height:100%;transition:transform .38s cubic-bezier(.4,0,.2,1);}
+.simg{flex-shrink:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:80px;position:relative;}
+.bg1{background:linear-gradient(145deg,#fff0ec,#ffd4cb);}
+.bg2{background:linear-gradient(145deg,#edf4ff,#d4e5ff);}
+.bg3{background:linear-gradient(145deg,#edfff4,#c6f6d5);}
+.bg4{background:linear-gradient(145deg,#fffbec,#ffecd4);}
+.bg5{background:linear-gradient(145deg,#f5ecff,#e8d4ff);}
+.sdots{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:5;}
+.dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.5);transition:all .2s;cursor:pointer;}
+.dot.active{background:#fff;width:18px;border-radius:3px;}
+.sbtn{position:absolute;top:50%;transform:translateY(-50%);width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.9);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;z-index:5;box-shadow:0 2px 12px rgba(0,0,0,.1);}
+.sbtn.l{left:12px;}.sbtn.r{right:12px;}
+.scnt{position:absolute;top:12px;right:12px;background:rgba(0,0,0,.35);color:#fff;font-size:11px;padding:3px 10px;border-radius:50px;font-weight:600;z-index:5;}
+.cbody{padding:18px 20px 20px;}
+.cprof{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.cav{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#ffe0d8,#ffd4cb);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.cin{font-size:13px;font-weight:700;}
+.ccat{font-size:11px;color:var(--s);}
+.cfw{font-size:11px;color:var(--s);margin-left:auto;text-align:right;flex-shrink:0;}
+.cfw strong{color:var(--p);display:block;font-size:13px;font-weight:800;}
+.cpname{font-size:15px;font-weight:700;margin-bottom:5px;line-height:1.4;}
+.cpdesc{font-size:12px;color:var(--m);margin-bottom:14px;line-height:1.6;}
+.cmeta{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
+.cpw{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.cprice{font-size:17px;font-weight:800;color:var(--p);}
+.corig{font-size:12px;color:var(--s);text-decoration:line-through;}
+.cdisc{background:var(--p);color:#fff;font-size:11px;font-weight:800;padding:3px 9px;border-radius:6px;}
+.cdday{display:flex;align-items:center;gap:5px;background:var(--pl);border-radius:50px;padding:5px 13px;}
+.cdt{font-size:11px;color:var(--s);}
+.cdv{font-size:13px;font-weight:800;color:var(--p);}
+.cdv.urgent{color:#e53e3e;animation:blink 1s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.5}}
+.ccta{display:block;width:100%;background:var(--p);color:#fff;border:none;border-radius:50px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity .2s;}
+.ccta:hover{opacity:.88;}
+
+/* ── 인플루언서 섹션 ── */
+.infsec{max-width:1140px;margin:56px auto 0;padding:0 28px 56px;}
+.infsh{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.infst{font-family:"Outfit",sans-serif;font-size:22px;font-weight:800;letter-spacing:-.5px;}
+.infst span{color:var(--p);}
+.ifttabs{display:flex;gap:7px;margin-bottom:22px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
+.ifttabs::-webkit-scrollbar{display:none;}
+.itab{flex-shrink:0;background:#f0f0ee;border:none;border-radius:50px;padding:7px 16px;font-size:12px;color:var(--m);cursor:pointer;font-family:inherit;font-weight:600;transition:all .2s;}
+.itab.active{background:var(--p);color:#fff;}
+.infwrap{position:relative;}
+.infscroll{display:flex;gap:16px;overflow-x:auto;padding:4px 0 20px;scrollbar-width:none;scroll-behavior:smooth;}
+.infscroll::-webkit-scrollbar{display:none;}
+.sarr{position:absolute;top:38%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:var(--w);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;z-index:10;box-shadow:0 4px 16px rgba(0,0,0,.1);transition:all .2s;}
+.sarr:hover{color:var(--p);}
+.al{left:-18px;}.ar{right:-18px;}
+
+/* 인플루언서 카드 */
+.icard{flex-shrink:0;width:220px;background:var(--w);border-radius:22px;overflow:hidden;cursor:pointer;transition:all .25s;box-shadow:var(--sh);}
+.icard:hover{box-shadow:var(--shh);transform:translateY(-5px);}
+.hotbadge{position:absolute;top:10px;right:10px;z-index:6;font-size:9px;font-weight:800;padding:3px 9px;border-radius:50px;background:var(--p);color:#fff;}
+
+/* 상품 이미지 슬라이더 (인플루언서 카드 내) */
+.ithumb{position:relative;width:100%;aspect-ratio:1;overflow:hidden;}
+.ithumb-inner{display:flex;width:100%;height:100%;transition:transform .35s ease;}
+.ithumb-slide{flex-shrink:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:52px;}
+.ithumb-dots{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);display:flex;gap:4px;z-index:5;}
+.idot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.5);transition:all .2s;}
+.idot.active{background:#fff;width:12px;border-radius:3px;}
+.iprev,.inext{position:absolute;top:50%;transform:translateY(-50%);width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.85);border:none;font-size:12px;cursor:pointer;z-index:5;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;}
+.ithumb:hover .iprev,.ithumb:hover .inext{opacity:1;}
+.iprev{left:8px;}.inext{right:8px;}
+
+/* 프로필 */
+.iprof{display:flex;align-items:center;gap:9px;padding:12px 14px 4px;position:relative;}
+.iavatar{width:40px;height:40px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px;background:linear-gradient(135deg,var(--p),#ff8e53);box-shadow:0 0 0 2.5px var(--w),0 0 0 4px rgba(255,90,54,.3);}
+.iname{font-size:13px;font-weight:800;}
+.ifollow{font-size:11px;color:var(--p);font-weight:700;margin-top:1px;}
+.ibody{padding:4px 14px 14px;}
+.idesc{font-size:11px;color:var(--s);margin-bottom:9px;line-height:1.5;}
+.isns{display:flex;gap:5px;margin-bottom:8px;flex-wrap:wrap;}
+.snsbtn{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;padding:5px 10px;border-radius:50px;cursor:pointer;font-family:inherit;text-decoration:none;transition:opacity .2s;line-height:1;border:none;}
+.snsbtn:hover{opacity:.8;}
+.si{background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366);color:#fff;}
+.sy{background:#FF0000;color:#fff;}
+.imktbtn{display:block;width:100%;background:var(--p);color:#fff;border:none;border-radius:50px;padding:8px 0;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity .2s;}
+.imktbtn:hover{opacity:.88;}
+
+footer{background:var(--w);padding:40px 24px;text-align:center;color:var(--s);font-size:13px;line-height:2.4;margin-top:56px;}
+footer strong{color:var(--t);font-family:"Outfit",sans-serif;font-size:16px;font-weight:800;}
+
+@media(max-width:720px){
+  .hero h1{font-size:32px;}
+  .nl{display:none;}
+  .ggrid{grid-template-columns:1fr;}
+  .icard{width:180px;}
+  .al,.ar{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- 네비 -->
+<nav>
+<div class="ni">
+  <div class="logo" onclick="goHome()"><span class="gr">Gr</span>ably</div>
+  <ul class="nl">
+    <li onclick="goHome()">홈</li>
+    <li onclick="filterNav('뷰티',this)">🌸 뷰티</li>
+    <li onclick="filterNav('패션',this)">👗 패션</li>
+    <li onclick="filterNav('식품',this)">🍎 식품</li>
+    <li onclick="filterNav('건강',this)">💪 건강</li>
+    <li onclick="filterNav('육아',this)">🍼 육아</li>
+    <li onclick="filterNav('홈리빙',this)">🏠 홈리빙</li>
+    <li onclick="filterNav('반려동물',this)">🐾 반려동물</li>
+  </ul>
+  <div class="nr">
+    <button class="lb" id="langBtn" onclick="toggleLang()">🌐 EN</button>
+    <button class="bo" id="loginBtn">로그인</button>
+  </div>
+</div>
+</nav>
+
+<!-- 히어로 -->
+<section class="hero">
+  <div class="hbadge" id="heroBadge">🛍️ 공동구매 모음 플랫폼</div>
+  <h1 id="heroTitle">원하는 공구템을<br><em>바로 찾아보세요</em></h1>
+  <p id="heroDesc">인기 공동구매 상품을 한눈에 확인하고<br>놓치지 않고 참여해보세요!</p>
+  <div class="sbox">
+    <span>🔍</span>
+    <input id="searchInput" type="text" placeholder="예) 선크림, 단백질 쉐이크, 이사배..." onkeydown="if(event.key==='Enter')doSearch()"/>
+    <button onclick="doSearch()" id="searchBtn">검색하기</button>
+  </div>
+  <div class="ctags" id="heroTags">
+    <span class="tag active" onclick="setTag(this)">전체</span>
+    <span class="tag" onclick="setTag(this)">🌸 뷰티</span>
+    <span class="tag" onclick="setTag(this)">👗 패션</span>
+    <span class="tag" onclick="setTag(this)">🍎 식품</span>
+    <span class="tag" onclick="setTag(this)">💪 건강</span>
+    <span class="tag" onclick="setTag(this)">🍼 육아</span>
+    <span class="tag" onclick="setTag(this)">🏠 홈리빙</span>
+    <span class="tag" onclick="setTag(this)">🐾 반려동물</span>
+  </div>
+</section>
+
+<!-- 검색결과 -->
+<div class="ra" id="resultArea">
+  <div class="rh"><div class="rk" id="resultKw"></div><div class="rcnt" id="resultCnt"></div></div>
+  <div class="rgrid" id="resultGrid"></div>
+</div>
+
+<!-- 공구 섹션 (위로 이동) -->
+<div class="gsec">
+  <div class="gsh">
+    <div class="gtit">🔥 <span id="gongguLabel">지금 진행 중인 공구</span></div>
+    <div class="seeall" id="gongguSeeAll">전체보기 →</div>
+  </div>
+  <div class="ggrid" id="gongguGrid"></div>
+</div>
+
+<!-- 인플루언서 섹션 (아래로 이동) -->
+<div class="infsec">
+  <div class="infsh">
+    <div class="infst">⭐ <span id="infLabel">인플루언서 둘러보기</span></div>
+    <div class="seeall" id="infSeeAll">전체보기 →</div>
+  </div>
+  <div class="ifttabs">
+    <button class="itab active" onclick="filterTab('전체',this)" data-ko="전체" data-en="All">전체</button>
+    <button class="itab" onclick="filterTab('뷰티',this)" data-ko="뷰티" data-en="Beauty">🌸 뷰티</button>
+    <button class="itab" onclick="filterTab('패션',this)" data-ko="패션" data-en="Fashion">👗 패션</button>
+    <button class="itab" onclick="filterTab('식품',this)" data-ko="식품" data-en="Food">🍎 식품</button>
+    <button class="itab" onclick="filterTab('건강',this)" data-ko="건강" data-en="Health">💪 건강</button>
+    <button class="itab" onclick="filterTab('육아',this)" data-ko="육아" data-en="Parenting">🍼 육아</button>
+    <button class="itab" onclick="filterTab('홈리빙',this)" data-ko="홈리빙" data-en="Home">🏠 홈리빙</button>
+    <button class="itab" onclick="filterTab('반려동물',this)" data-ko="반려동물" data-en="Pets">🐾 반려동물</button>
+  </div>
+  <div class="infwrap">
+    <button class="sarr al" onclick="scrollInf(-1)">&#8249;</button>
+    <div class="infscroll" id="infScroll"></div>
+    <button class="sarr ar" onclick="scrollInf(1)">&#8250;</button>
+  </div>
+</div>
+
+<footer>
+  <strong>Grably</strong><br>
+  <span id="footerDesc">공동구매 모음 플랫폼</span><br>
+  <span id="footerLinks">문의 · 이용약관 · 개인정보처리방침</span><br>
+  © 2025 Grably. All rights reserved.
+</footer>
+
+<script>
+var lang='ko';
+
+/* ── 인플루언서 데이터 (상품 이미지 5개씩 + SNS 링크) ── */
+var INF=[
+  {id:1,name:'이사배',nameEn:'RISABAE',emoji:'💄',cat:'뷰티',catEn:'Beauty',
+   desc:'메이크업 아티스트 · 뷰티',descEn:'MUA · Beauty Creator',
+   followers:'263만',followersEn:'2.63M',hot:true,
+   sns:[{t:'insta',u:'https://www.instagram.com/risabae_art'},{t:'youtube',u:'https://www.youtube.com/@risabae'}],
+   products:[
+     {e:'💄',bg:'bg1',name:'쿠션 파운데이션'},
+     {e:'💋',bg:'bg3',name:'립스틱 세트'},
+     {e:'✨',bg:'bg2',name:'하이라이터'},
+     {e:'🎨',bg:'bg4',name:'아이섀도 팔레트'},
+     {e:'🌸',bg:'bg5',name:'블러셔'}
+   ]},
+  {id:2,name:'라뮤끄',nameEn:'LAMUQE',emoji:'🌷',cat:'뷰티',catEn:'Beauty',
+   desc:'스킨케어 · 데일리 뷰티',descEn:'Skincare · Daily Beauty',
+   followers:'89만',followersEn:'890K',hot:true,
+   sns:[{t:'insta',u:'https://www.instagram.com/lamuqe'},{t:'youtube',u:'https://www.youtube.com/@lamuqe'}],
+   products:[
+     {e:'💧',bg:'bg2',name:'히알루론산 앰플'},
+     {e:'🧴',bg:'bg1',name:'수분 크림'},
+     {e:'☀️',bg:'bg4',name:'선크림 SPF50'},
+     {e:'🌿',bg:'bg3',name:'토너 패드'},
+     {e:'💆',bg:'bg5',name:'마스크팩'}
+   ]},
+  {id:3,name:'한현민',nameEn:'Han Hyunmin',emoji:'✨',cat:'뷰티',catEn:'Beauty',
+   desc:'남성 뷰티 · 그루밍',descEn:'Men Beauty · Grooming',
+   followers:'110만',followersEn:'1.1M',hot:false,
+   sns:[{t:'insta',u:'https://www.instagram.com/han_hyunmin'},{t:'youtube',u:'https://www.youtube.com/@hanhyunmin'}],
+   products:[
+     {e:'🧴',bg:'bg3',name:'남성 스킨케어 세트'},
+     {e:'💈',bg:'bg1',name:'헤어왁스'},
+     {e:'🪒',bg:'bg2',name:'쉐이빙 폼'},
+     {e:'✨',bg:'bg5',name:'비비크림'},
+     {e:'💪',bg:'bg4',name:'BB 쿠션'}
+   ]},
+  {id:4,name:'보겸',nameEn:'Bokyem',emoji:'👗',cat:'패션',catEn:'Fashion',
+   desc:'데일리룩 · 트렌드 패션',descEn:'Daily Look · Trend Fashion',
+   followers:'450만',followersEn:'4.5M',hot:true,
+   sns:[{t:'youtube',u:'https://www.youtube.com/@bokyem'},{t:'insta',u:'https://www.instagram.com/bokyem_tv'}],
+   products:[
+     {e:'👗',bg:'bg4',name:'오버핏 셔츠'},
+     {e:'👟',bg:'bg2',name:'스니커즈'},
+     {e:'🧢',bg:'bg1',name:'볼캡'},
+     {e:'🧥',bg:'bg3',name:'바람막이'},
+     {e:'👖',bg:'bg5',name:'와이드 팬츠'}
+   ]},
+  {id:5,name:'에이프릴스킨',nameEn:'April Skin',emoji:'🧥',cat:'패션',catEn:'Fashion',
+   desc:'스트릿 · 캐주얼 패션',descEn:'Street · Casual Fashion',
+   followers:'62만',followersEn:'620K',hot:false,
+   sns:[{t:'insta',u:'https://www.instagram.com/aprilskin_official'}],
+   products:[
+     {e:'🧥',bg:'bg1',name:'캐주얼 자켓'},
+     {e:'👕',bg:'bg3',name:'베이직 티셔츠'},
+     {e:'👜',bg:'bg5',name:'미니백'},
+     {e:'🧣',bg:'bg2',name:'머플러'},
+     {e:'💍',bg:'bg4',name:'액세서리 세트'}
+   ]},
+  {id:6,name:'승우아빠',nameEn:'Seungwoo Dad',emoji:'🍳',cat:'식품',catEn:'Food',
+   desc:'홈쿡 · 레시피',descEn:'Home Cook · Recipe',
+   followers:'150만',followersEn:'1.5M',hot:true,
+   sns:[{t:'youtube',u:'https://www.youtube.com/@seungwoodad'},{t:'insta',u:'https://www.instagram.com/seungwoodad'}],
+   products:[
+     {e:'🍳',bg:'bg4',name:'프리미엄 밀키트'},
+     {e:'🥘',bg:'bg3',name:'국물 요리 세트'},
+     {e:'🌶️',bg:'bg1',name:'고추장 소스'},
+     {e:'🍜',bg:'bg2',name:'간편 파스타'},
+     {e:'🥗',bg:'bg5',name:'샐러드 드레싱'}
+   ]},
+  {id:7,name:'쿠킹하루',nameEn:'Cooking Haru',emoji:'🥘',cat:'식품',catEn:'Food',
+   desc:'간편요리 · 밀키트',descEn:'Easy Cooking · Meal Kit',
+   followers:'75만',followersEn:'750K',hot:false,
+   sns:[{t:'youtube',u:'https://www.youtube.com/@cookingharu'},{t:'insta',u:'https://www.instagram.com/cookingharu'}],
+   products:[
+     {e:'🥘',bg:'bg2',name:'한식 밀키트'},
+     {e:'🍱',bg:'bg4',name:'도시락 세트'},
+     {e:'🍲',bg:'bg1',name:'찌개 소스'},
+     {e:'🥩',bg:'bg3',name:'구이용 고기 세트'},
+     {e:'🍚',bg:'bg5',name:'영양 잡곡밥'}
+   ]},
+  {id:8,name:'정욱재',nameEn:'Jung Wookjae',emoji:'💪',cat:'건강',catEn:'Health',
+   desc:'헬스 · 다이어트 전문',descEn:'Fitness · Diet Expert',
+   followers:'105만',followersEn:'1.05M',hot:true,
+   sns:[{t:'youtube',u:'https://www.youtube.com/@wookjae'},{t:'insta',u:'https://www.instagram.com/wookjae_fit'}],
+   products:[
+     {e:'💪',bg:'bg3',name:'단백질 쉐이크 2kg'},
+     {e:'🏋️',bg:'bg1',name:'운동 보조제'},
+     {e:'🥤',bg:'bg4',name:'아미노산 음료'},
+     {e:'🎽',bg:'bg2',name:'운동복 세트'},
+     {e:'⚡',bg:'bg5',name:'크레아틴'}
+   ]},
+  {id:9,name:'닥터자까',nameEn:'Dr. Jakka',emoji:'🩺',cat:'건강',catEn:'Health',
+   desc:'의사 · 건강 정보',descEn:'Doctor · Health Info',
+   followers:'92만',followersEn:'920K',hot:true,
+   sns:[{t:'youtube',u:'https://www.youtube.com/@drjakka'},{t:'insta',u:'https://www.instagram.com/drjakka'}],
+   products:[
+     {e:'💊',bg:'bg5',name:'영양제 세트'},
+     {e:'🩺',bg:'bg2',name:'면역력 강화 패키지'},
+     {e:'🌿',bg:'bg3',name:'유산균'},
+     {e:'🧬',bg:'bg1',name:'오메가3'},
+     {e:'☀️',bg:'bg4',name:'비타민D'}
+   ]},
+  {id:10,name:'서준맘',nameEn:'Seojun Mom',emoji:'🍼',cat:'육아',catEn:'Parenting',
+   desc:'육아 · 아기용품 리뷰',descEn:'Parenting · Baby Product Review',
+   followers:'56만',followersEn:'560K',hot:false,
+   sns:[{t:'insta',u:'https://www.instagram.com/seojunmom'}],
+   products:[
+     {e:'🍼',bg:'bg1',name:'아기 로션 세트'},
+     {e:'👶',bg:'bg3',name:'신생아 의류'},
+     {e:'🧸',bg:'bg5',name:'유아 장난감'},
+     {e:'🛁',bg:'bg2',name:'아기 목욕용품'},
+     {e:'🌙',bg:'bg4',name:'수면 보조 베개'}
+   ]},
+  {id:11,name:'오마이베이비',nameEn:'Oh My Baby',emoji:'👶',cat:'육아',catEn:'Parenting',
+   desc:'신생아 · 육아 정보',descEn:'Newborn · Parenting Tips',
+   followers:'38만',followersEn:'380K',hot:false,
+   sns:[{t:'youtube',u:'https://www.youtube.com/@ohmybabykr'},{t:'insta',u:'https://www.instagram.com/ohmybaby_kr'}],
+   products:[
+     {e:'👶',bg:'bg2',name:'신생아 케어 세트'},
+     {e:'🍼',bg:'bg4',name:'젖병 소독기'},
+     {e:'🧷',bg:'bg1',name:'기저귀 케이크'},
+     {e:'🌈',bg:'bg3',name:'모빌'},
+     {e:'💤',bg:'bg5',name:'수유쿠션'}
+   ]},
+  {id:12,name:'하우스티스트',nameEn:'Housetist',emoji:'🏠',cat:'홈리빙',catEn:'Home',
+   desc:'인테리어 · 홈스타일링',descEn:'Interior · Home Styling',
+   followers:'83만',followersEn:'830K',hot:true,
+   sns:[{t:'youtube',u:'https://www.youtube.com/@housetist'},{t:'insta',u:'https://www.instagram.com/housetist'}],
+   products:[
+     {e:'💡',bg:'bg4',name:'무드등 조명 세트'},
+     {e:'🪴',bg:'bg3',name:'미니 화분 세트'},
+     {e:'🏠',bg:'bg2',name:'수납 바스켓'},
+     {e:'🖼️',bg:'bg5',name:'패브릭 포스터'},
+     {e:'🕯️',bg:'bg1',name:'캔들 홀더'}
+   ]},
+  {id:13,name:'소품남',nameEn:'Sopmnam',emoji:'🪴',cat:'홈리빙',catEn:'Home',
+   desc:'소품 · 가구 · 인테리어',descEn:'Decor · Furniture · Interior',
+   followers:'47만',followersEn:'470K',hot:false,
+   sns:[{t:'insta',u:'https://www.instagram.com/sopmnam'},{t:'youtube',u:'https://www.youtube.com/@sopmnam'}],
+   products:[
+     {e:'🪴',bg:'bg3',name:'다육이 세트'},
+     {e:'🧺',bg:'bg1',name:'라탄 바구니'},
+     {e:'🪞',bg:'bg5',name:'벽걸이 거울'},
+     {e:'🛋️',bg:'bg2',name:'쿠션 커버'},
+     {e:'🪑',bg:'bg4',name:'폴딩 체어'}
+   ]},
+  {id:14,name:'크림히어로즈',nameEn:'Cream Heroes',emoji:'🐱',cat:'반려동물',catEn:'Pets',
+   desc:'고양이 · 반려동물 일상',descEn:'Cats · Pet Daily Life',
+   followers:'910만',followersEn:'9.1M',hot:true,
+   sns:[{t:'youtube',u:'https://www.youtube.com/@creamheroes'},{t:'insta',u:'https://www.instagram.com/cream_heroesvlog'}],
+   products:[
+     {e:'🐱',bg:'bg4',name:'고양이 간식 세트'},
+     {e:'🏠',bg:'bg2',name:'캣타워'},
+     {e:'🎾',bg:'bg3',name:'장난감 세트'},
+     {e:'🧴',bg:'bg1',name:'고양이 샴푸'},
+     {e:'🍖',bg:'bg5',name:'고급 사료'}
+   ]},
+  {id:15,name:'댕댕이육아일기',nameEn:'Puppy Diary',emoji:'🐶',cat:'반려동물',catEn:'Pets',
+   desc:'강아지 · 반려견 케어',descEn:'Dog · Pet Care',
+   followers:'43만',followersEn:'430K',hot:false,
+   sns:[{t:'insta',u:'https://www.instagram.com/puppy_diary_kr'}],
+   products:[
+     {e:'🐶',bg:'bg1',name:'강아지 간식'},
+     {e:'🦴',bg:'bg3',name:'덴탈 껌'},
+     {e:'🎽',bg:'bg5',name:'강아지 옷'},
+     {e:'🛁',bg:'bg2',name:'펫 샴푸'},
+     {e:'🏠',bg:'bg4',name:'강아지 하우스'}
+   ]}
+];
+
+var GONGGU=[
+  {id:0,inm:'이사배',inmEn:'RISABAE',ie:'💄',ic:'뷰티',icEn:'Beauty',fw:'263만',fwEn:'2.63M',
+   pn:'이사배 X 클리오 쿠션 파운데이션',pnEn:'RISABAE X CLIO Cushion Foundation',
+   pd:'이사배 아티스트가 직접 기획. 커버력+보습력 동시에! 단독 공구가.',pdEn:'Designed by RISABAE. Full coverage + hydration. Exclusive!',
+   imgs:[{e:'💄',b:'bg1'},{e:'✨',b:'bg2'},{e:'🌸',b:'bg3'},{e:'🎨',b:'bg4'},{e:'💋',b:'bg5'}],
+   price:'32,000원',priceEn:'$24',orig:'45,000원',origEn:'$34',disc:'29%',dday:4},
+  {id:1,inm:'승우아빠',inmEn:'Seungwoo Dad',ie:'🍳',ic:'식품',icEn:'Food',fw:'150만',fwEn:'1.5M',
+   pn:'승우아빠 추천 프리미엄 밀키트 5종',pnEn:'Seungwoo Dad Premium Meal Kit x5',
+   pd:'방송에서 직접 소개한 5가지 밀키트. 간편하고 맛있는 홈쿡 완성!',pdEn:'5 meal kits featured on his channel. Easy and delicious!',
+   imgs:[{e:'🍳',b:'bg4'},{e:'🥘',b:'bg3'},{e:'🥗',b:'bg2'},{e:'🌶️',b:'bg1'},{e:'🍜',b:'bg5'}],
+   price:'39,900원',priceEn:'$30',orig:'65,000원',origEn:'$49',disc:'39%',dday:2},
+  {id:2,inm:'정욱재',inmEn:'Jung Wookjae',ie:'💪',ic:'건강',icEn:'Health',fw:'105만',fwEn:'1.05M',
+   pn:'정욱재 추천 단백질 쉐이크 2kg',pnEn:'Jung Wookjae Protein Shake 2kg',
+   pd:'정욱재가 직접 먹는 단백질. 맛, 품질, 가격 모두 검증. 초코/바닐라 선택!',pdEn:'The exact protein Wookjae uses. Choco or Vanilla!',
+   imgs:[{e:'💪',b:'bg3'},{e:'🥤',b:'bg1'},{e:'🏋️',b:'bg4'},{e:'⚡',b:'bg5'},{e:'🎽',b:'bg2'}],
+   price:'48,000원',priceEn:'$36',orig:'72,000원',origEn:'$54',disc:'33%',dday:1},
+  {id:3,inm:'라뮤끄',inmEn:'LAMUQE',ie:'🌷',ic:'뷰티',icEn:'Beauty',fw:'89만',fwEn:'890K',
+   pn:'라뮤끄 추천 히알루론산 앰플 세트',pnEn:'LAMUQE Hyaluronic Acid Ampoule Set',
+   pd:'라뮤끄가 6개월 사용 후 직접 추천. 수분+탄력 동시 케어!',pdEn:'Recommended after 6 months of use. Hydration & elasticity!',
+   imgs:[{e:'💧',b:'bg2'},{e:'🌷',b:'bg1'},{e:'🌿',b:'bg3'},{e:'🧴',b:'bg5'},{e:'☀️',b:'bg4'}],
+   price:'26,000원',priceEn:'$20',orig:'42,000원',origEn:'$32',disc:'38%',dday:6},
+  {id:4,inm:'크림히어로즈',inmEn:'Cream Heroes',ie:'🐱',ic:'반려동물',icEn:'Pets',fw:'910만',fwEn:'9.1M',
+   pn:'크림히어로즈 고양이 간식 세트',pnEn:'Cream Heroes Cat Treat Set',
+   pd:'크림이와 친구들이 먹는 그 간식! 영양 검증 완료, 기호성 최고.',pdEn:'The exact treats the Cream Heroes cats eat!',
+   imgs:[{e:'🐱',b:'bg4'},{e:'🦴',b:'bg3'},{e:'💝',b:'bg1'},{e:'🎾',b:'bg2'},{e:'🍖',b:'bg5'}],
+   price:'19,500원',priceEn:'$15',orig:'32,000원',origEn:'$24',disc:'39%',dday:10},
+  {id:5,inm:'하우스티스트',inmEn:'Housetist',ie:'🏠',ic:'홈리빙',icEn:'Home',fw:'83만',fwEn:'830K',
+   pn:'하우스티스트 추천 무드등 조명 세트',pnEn:'Housetist Mood Light Set',
+   pd:'인테리어 전문가가 직접 큐레이션. 분위기 있는 공간 완성!',pdEn:'Curated by an interior expert. Transform your space!',
+   imgs:[{e:'🏠',b:'bg2'},{e:'💡',b:'bg4'},{e:'🪴',b:'bg3'},{e:'🕯️',b:'bg1'},{e:'🖼️',b:'bg5'}],
+   price:'34,000원',priceEn:'$26',orig:'55,000원',origEn:'$42',disc:'38%',dday:8}
+];
+
+var SEARCH=[
+  {name:'이사배 X 클리오 쿠션 파운데이션',nameEn:'RISABAE X CLIO Cushion Foundation',inf:'이사배',infEn:'RISABAE',e:'💄',p:'32,000원',pEn:'$24',d:'29% 할인',dEn:'29% OFF'},
+  {name:'승우아빠 추천 프리미엄 밀키트 5종',nameEn:'Seungwoo Dad Premium Meal Kit x5',inf:'승우아빠',infEn:'Seungwoo Dad',e:'🍳',p:'39,900원',pEn:'$30',d:'39% 할인',dEn:'39% OFF'},
+  {name:'정욱재 추천 단백질 쉐이크 2kg',nameEn:'Jung Wookjae Protein Shake 2kg',inf:'정욱재',infEn:'Jung Wookjae',e:'💪',p:'48,000원',pEn:'$36',d:'33% 할인',dEn:'33% OFF'},
+  {name:'라뮤끄 히알루론산 앰플 세트',nameEn:'LAMUQE Hyaluronic Acid Ampoule Set',inf:'라뮤끄',infEn:'LAMUQE',e:'💧',p:'26,000원',pEn:'$20',d:'38% 할인',dEn:'38% OFF'},
+  {name:'크림히어로즈 고양이 간식 세트',nameEn:'Cream Heroes Cat Treat Set',inf:'크림히어로즈',infEn:'Cream Heroes',e:'🐱',p:'19,500원',pEn:'$15',d:'39% 할인',dEn:'39% OFF'},
+  {name:'하우스티스트 무드등 조명 세트',nameEn:'Housetist Mood Light Set',inf:'하우스티스트',infEn:'Housetist',e:'🏠',p:'34,000원',pEn:'$26',d:'38% 할인',dEn:'38% OFF'},
+  {name:'닥터자까 추천 영양제 세트',nameEn:'Dr. Jakka Supplement Set',inf:'닥터자까',infEn:'Dr. Jakka',e:'🩺',p:'29,000원',pEn:'$22',d:'30% 할인',dEn:'30% OFF'},
+  {name:'서준맘 추천 아기 로션',nameEn:'Seojun Mom Baby Lotion',inf:'서준맘',infEn:'Seojun Mom',e:'🍼',p:'14,500원',pEn:'$11',d:'25% 할인',dEn:'25% OFF'}
+];
+
+/* 인플루언서 카드 슬라이더 상태 */
+var IS={};
+
+function buildInfThumb(inf){
+  var slides='',dots='';
+  for(var i=0;i<inf.products.length;i++){
+    var p=inf.products[i];
+    slides+='<div class="ithumb-slide '+p.bg+'">'+p.e+'</div>';
+    dots+='<span class="idot'+(i===0?' active':'')+'" onclick="goIdot('+inf.id+','+i+',event)"></span>';
+  }
+  return '<div class="ithumb" id="ith'+inf.id+'">'
+    +'<div class="ithumb-inner" id="iti'+inf.id+'">'+slides+'</div>'
+    +'<button class="iprev" onclick="prevI(event,'+inf.id+')">&#8249;</button>'
+    +'<button class="inext" onclick="nextI(event,'+inf.id+')">&#8250;</button>'
+    +'<div class="ithumb-dots" id="itd'+inf.id+'">'+dots+'</div>'
+    +'</div>';
+}
+
+function updI(id){
+  var inf=INF.find(function(x){return x.id===id;});
+  var idx=IS[id];
+  document.getElementById('iti'+id).style.transform='translateX(-'+(idx*100)+'%)';
+  document.querySelectorAll('#itd'+id+' .idot').forEach(function(d,i){
+    if(i===idx)d.classList.add('active');else d.classList.remove('active');
+  });
+}
+function nextI(e,id){e.stopPropagation();var inf=INF.find(function(x){return x.id===id;});IS[id]=(IS[id]+1)%inf.products.length;updI(id);}
+function prevI(e,id){e.stopPropagation();var inf=INF.find(function(x){return x.id===id;});IS[id]=(IS[id]-1+inf.products.length)%inf.products.length;updI(id);}
+function goIdot(id,idx,e){e.stopPropagation();IS[id]=idx;updI(id);}
+
+function buildSns(sns,isEn){
+  if(!sns||!sns.length)return '';
+  var out='';
+  for(var i=0;i<sns.length;i++){
+    var s=sns[i];
+    var lbl=s.t==='insta'?(isEn?'📸 Instagram':'📸 인스타'):(isEn?'▶ YouTube':'▶ 유튜브');
+    var cls=s.t==='insta'?'si':'sy';
+    out+='<a class="snsbtn '+cls+'" href="'+s.u+'" target="_blank" onclick="event.stopPropagation()">'+lbl+'</a>';
+  }
+  return out;
+}
+
+function renderInf(list){
+  var isEn=lang==='en';
+  var out='';
+  for(var i=0;i<list.length;i++){
+    var inf=list[i];
+    IS[inf.id]=0;
+    out+='<div class="icard" onclick="searchByInf('+inf.id+')" style="position:relative">'
+      +(inf.hot?'<div class="hotbadge">🔥 HOT</div>':'')
+      +buildInfThumb(inf)
+      +'<div class="iprof">'
+        +'<div class="iavatar">'+inf.emoji+'</div>'
+        +'<div>'
+          +'<div class="iname">'+(isEn?inf.nameEn:inf.name)+'</div>'
+          +'<div class="ifollow">👥 '+(isEn?inf.followersEn:inf.followers)+'</div>'
+        +'</div>'
+      +'</div>'
+      +'<div class="ibody">'
+        +'<div class="idesc">'+(isEn?inf.descEn:inf.desc)+'</div>'
+        +'<div class="isns">'+buildSns(inf.sns,isEn)+'</div>'
+        +'<button class="imktbtn" onclick="event.stopPropagation();searchByInf('+inf.id+')">🛍️ '+(isEn?'View Deals':'진행 공구 보기')+'</button>'
+      +'</div>'
+    +'</div>';
+  }
+  document.getElementById('infScroll').innerHTML=out;
+}
+
+function filterTab(cat,el){
+  document.querySelectorAll('.itab').forEach(function(t){t.classList.remove('active');});
+  el.classList.add('active');
+  var ko=el.getAttribute('data-ko');
+  renderInf(ko==='전체'?INF:INF.filter(function(x){return x.cat===ko;}));
+}
+function scrollInf(d){document.getElementById('infScroll').scrollBy({left:d*420,behavior:'smooth'});}
+
+/* 공구 슬라이더 */
+var SI={};
+function renderGonggu(){
+  var isEn=lang==='en';
+  var out='';
+  for(var i=0;i<GONGGU.length;i++){
+    var g=GONGGU[i];
+    SI[g.id]=0;
+    var urgent=g.dday<=1;
+    var dv=(g.dday<=0)?(isEn?'Last Day!':'오늘 마감!'):('D-'+g.dday);
+    var slides='',dots='';
+    for(var s=0;s<g.imgs.length;s++){slides+='<div class="simg '+g.imgs[s].b+'">'+g.imgs[s].e+'</div>';}
+    for(var d=0;d<g.imgs.length;d++){dots+='<span class="dot'+(d===0?' active':'')+'" onclick="goSlide('+g.id+','+d+')"></span>';}
+    out+='<div class="gcard">'
+      +'<div class="slider"><div class="sinner" id="sl'+g.id+'">'+slides+'</div>'
+      +'<button class="sbtn l" onclick="prevS(event,'+g.id+')">&#8249;</button>'
+      +'<button class="sbtn r" onclick="nextS(event,'+g.id+')">&#8250;</button>'
+      +'<div class="scnt" id="sc'+g.id+'">1 / '+g.imgs.length+'</div>'
+      +'<div class="sdots" id="sd'+g.id+'">'+dots+'</div></div>'
+      +'<div class="cbody">'
+        +'<div class="cprof">'
+          +'<div class="cav">'+g.ie+'</div>'
+          +'<div style="flex:1;min-width:0"><div class="cin">'+(isEn?g.inmEn:g.inm)+'</div><div class="ccat">'+(isEn?g.icEn:g.ic)+'</div></div>'
+          +'<div class="cfw"><strong>'+(isEn?g.fwEn:g.fw)+'</strong>'+(isEn?' followers':' 팔로워')+'</div>'
+        +'</div>'
+        +'<div class="cpname">'+(isEn?g.pnEn:g.pn)+'</div>'
+        +'<div class="cpdesc">'+(isEn?g.pdEn:g.pd)+'</div>'
+        +'<div class="cmeta">'
+          +'<div class="cpw"><span class="cprice">'+(isEn?g.priceEn:g.price)+'</span>'
+          +'<span class="corig">'+(isEn?g.origEn:g.orig)+'</span>'
+          +'<span class="cdisc">'+g.disc+' OFF</span></div>'
+          +'<div class="cdday"><span class="cdt">'+(isEn?'Ends in':'마감까지')+'</span>'
+          +'<span class="cdv'+(urgent?' urgent':'')+'">'+dv+'</span></div>'
+        +'</div>'
+        +'<button class="ccta">'+(isEn?'Join Group Buy →':'공구 참여하기 →')+'</button>'
+      +'</div></div>';
+  }
+  document.getElementById('gongguGrid').innerHTML=out;
+}
+function updSlider(id){
+  var g=GONGGU.find(function(x){return x.id===id;});
+  var idx=SI[id];
+  document.getElementById('sl'+id).style.transform='translateX(-'+(idx*100)+'%)';
+  document.getElementById('sc'+id).textContent=(idx+1)+' / '+g.imgs.length;
+  document.querySelectorAll('#sd'+id+' .dot').forEach(function(d,i){if(i===idx)d.classList.add('active');else d.classList.remove('active');});
+}
+function nextS(e,id){e.stopPropagation();var g=GONGGU.find(function(x){return x.id===id;});SI[id]=(SI[id]+1)%g.imgs.length;updSlider(id);}
+function prevS(e,id){e.stopPropagation();var g=GONGGU.find(function(x){return x.id===id;});SI[id]=(SI[id]-1+g.imgs.length)%g.imgs.length;updSlider(id);}
+function goSlide(id,idx){SI[id]=idx;updSlider(id);}
+
+/* 검색 */
+function doSearch(){
+  var q=document.getElementById('searchInput').value.trim();if(!q)return;
+  var r=SEARCH.filter(function(p){return p.name.indexOf(q)>-1||p.inf.indexOf(q)>-1||p.nameEn.toLowerCase().indexOf(q.toLowerCase())>-1||p.infEn.toLowerCase().indexOf(q.toLowerCase())>-1;});
+  showResults(q,r);
+}
+function searchByInf(id){
+  var inf=INF.find(function(x){return x.id===id;});if(!inf)return;
+  var isEn=lang==='en';
+  var dn=isEn?inf.nameEn:inf.name;
+  document.getElementById('searchInput').value=dn;
+  var r=SEARCH.filter(function(p){return p.inf===inf.name;});
+  showResults(isEn?dn+' Deals':dn+'의 공구',r);
+}
+function showResults(kw,results){
+  var isEn=lang==='en';
+  document.getElementById('resultKw').innerHTML='"<em>'+kw+'</em>" '+(isEn?'Results':'검색 결과');
+  document.getElementById('resultCnt').textContent=isEn?results.length+' results':'총 '+results.length+'개';
+  var out='';
+  if(!results.length){out='<div style="padding:40px;color:#aaa;text-align:center;grid-column:1/-1">🔍 '+(isEn?'No results found':'검색 결과가 없어요')+'</div>';}
+  else{for(var i=0;i<results.length;i++){var p=results[i];out+='<div class="rcard"><div class="remoji">'+p.e+'</div><div><div class="rname">'+(isEn?p.nameEn:p.name)+'</div><div class="rby">📌 '+(isEn?p.infEn:p.inf)+'</div><div class="rprice">'+(isEn?p.pEn:p.p)+' <span class="rdisc">'+(isEn?p.dEn:p.d)+'</span></div></div></div>';}}
+  document.getElementById('resultGrid').innerHTML=out;
+  document.getElementById('resultArea').classList.add('visible');
+  document.getElementById('resultArea').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function setTag(el){document.querySelectorAll('#heroTags .tag').forEach(function(t){t.classList.remove('active');});el.classList.add('active');}
+
+function filterNav(cat,el){
+  document.querySelectorAll('.nl li').forEach(function(t){t.classList.remove('active');});
+  if(el)el.classList.add('active');
+  document.querySelectorAll('.itab').forEach(function(t){t.classList.remove('active');if(t.getAttribute('data-ko')===cat)t.classList.add('active');});
+  renderInf(INF.filter(function(x){return x.cat===cat;}));
+  window.scrollTo({top:document.querySelector('.infsec').offsetTop-80,behavior:'smooth'});
+}
+function goHome(){
+  document.getElementById('resultArea').classList.remove('visible');
+  document.getElementById('searchInput').value='';
+  document.querySelectorAll('.itab').forEach(function(t,i){if(i===0)t.classList.add('active');else t.classList.remove('active');});
+  renderInf(INF);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* 언어 전환 */
+function toggleLang(){
+  lang=lang==='ko'?'en':'ko';
+  var isEn=lang==='en';
+  var btn=document.getElementById('langBtn');
+  btn.textContent=isEn?'🌐 KOR':'🌐 EN';
+  if(isEn)btn.classList.add('en');else btn.classList.remove('en');
+  document.getElementById('heroBadge').textContent=isEn?'🛍️ Group Buy Platform':'🛍️ 공동구매 모음 플랫폼';
+  document.getElementById('heroTitle').innerHTML=isEn?'Find the deals you want<br><em>right here</em>':'원하는 공구템을<br><em>바로 찾아보세요</em>';
+  document.getElementById('heroDesc').innerHTML=isEn?'Browse group buy deals in one place.<br>Never miss out again!':'인기 공동구매 상품을 한눈에 확인하고<br>놓치지 않고 참여해보세요!';
+  document.getElementById('searchInput').placeholder=isEn?'e.g. sunscreen, protein shake, RISABAE...':'예) 선크림, 단백질 쉐이크, 이사배...';
+  document.getElementById('searchBtn').textContent=isEn?'Search':'검색하기';
+  document.getElementById('loginBtn').textContent=isEn?'Login':'로그인';
+  document.getElementById('infLabel').textContent=isEn?'Browse Influencers':'인플루언서 둘러보기';
+  document.getElementById('infSeeAll').textContent=isEn?'See all →':'전체보기 →';
+  document.getElementById('gongguLabel').textContent=isEn?'Live Group Buys':'지금 진행 중인 공구';
+  document.getElementById('gongguSeeAll').textContent=isEn?'See all →':'전체보기 →';
+  document.getElementById('footerDesc').textContent=isEn?'Group Buy Platform':'공동구매 모음 플랫폼';
+  document.getElementById('footerLinks').textContent=isEn?'Contact · Terms · Privacy':'문의 · 이용약관 · 개인정보처리방침';
+  var at=document.querySelector('.itab.active');
+  var ko=at?at.getAttribute('data-ko'):'전체';
+  renderInf(ko==='전체'?INF:INF.filter(function(x){return x.cat===ko;}));
+  renderGonggu();
+}
+
+renderInf(INF);
+renderGonggu();
+</script>
+</body>
+</html>
